@@ -32,9 +32,9 @@ locals {
 # This external module encapsulates the VPC/Subnet creation similar to what we did earlier.
 # Modules are great for code reuse.
 module "networking" {
-  source = "github.com/TroyFluegge/aws-webapp-networking?ref=v1.0"
+  source = "https://github.com/hashicorp/terraform-aws-webapp-networking?ref=v1.0.0"
   # Pass the required variables  for the module
-  # https://github.com/TroyFluegge/aws-webapp-networking/blob/main/variables.tf
+  # https://github.com/hashicorp/terraform-aws-webapp-networking/blob/main/variables.tf
    
 
 }
@@ -46,7 +46,7 @@ resource "aws_instance" "tflabs" {
   #Hint: reference the AMI data source ID from above
   ami           =
   instance_type = "t3.micro"
-  # Hint: https://github.com/TroyFluegge/aws-webapp-networking/blob/main/outputs.tf
+  # Hint: https://github.com/hashicorp/terraform-aws-webapp-networking/blob/main/outputs.tf
   subnet_id =
   tags = {
       # Use a Terraform function to set the created value to a current timestamp
