@@ -1,47 +1,48 @@
-//TFC VCS
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+resource "tfe_organization" "Terraform-Foundations" {
+  name  = "Terraform-Foundations-\${random_id.suffix.hex}"
+  email = "somerandomse@hashicorp.com"
+}
+
 resource "tfe_oauth_client" "test-oauth-client" {
-   organization = var.TFC_ORGANIZATION
-   api_url          = "http://${var.GITLAB_PUBLIC_ADDRESS}/api/v4"
-   http_url         = "http://${var.GITLAB_PUBLIC_ADDRESS}/"
-   oauth_token      = var.GITLAB_TOKEN
+   organization = tfe_organization.Terraform-Foundations.name
+   api_url          = "http://$GITLAB_PUBLIC_ADDRESS/api/v4"
+   http_url         = "http://$GITLAB_PUBLIC_ADDRESS/"
+   oauth_token      = "$GITLAB_TOKEN"
    service_provider = "gitlab_community_edition"
 }
 
-//TFC Workspaces
-resource "tfe_workspace" "hashicups_prod" {
-  name         = "hashicups-prod"
-  organization = var.TFC_ORGANIZATION
-  auto_apply = false
-  queue_all_runs = false
-  terraform_version = "0.14.9"
+resource "tfe_workspace" "hashicat_prod" {
+  name         = "HashiCat-Prod"
+  organization = tfe_organization.Terraform-Foundations.name
+  auto_apply = true
   vcs_repo {
-    identifier = "hashicups-development-team/hashicups-application"
+    identifier = "development-team/hashicat-aws"
     branch = "master"
     oauth_token_id     = tfe_oauth_client.test-oauth-client.oauth_token_id
   }
 }
 
-resource "tfe_workspace" "hashicups_stage" {
-  name         = "hashicups-staging"
-  organization = var.TFC_ORGANIZATION
-  auto_apply = false
-  queue_all_runs = false
-  terraform_version = "0.14.9"
+resource "tfe_workspace" "hashicat_stage" {
+  name         = "HashiCat-Stage"
+  organization = tfe_organization.Terraform-Foundations.name
+  auto_apply = true
   vcs_repo {
-    identifier = "hashicups-development-team/hashicups-application"
+    identifier = "development-team/hashicat-aws"
     branch = "stage"
     oauth_token_id     = tfe_oauth_client.test-oauth-client.oauth_token_id
   }
 }
 
-resource "tfe_workspace" "hashicups_dev" {
-  name         = "hashicups-dev"
-  organization = var.TFC_ORGANIZATION
+resource "tfe_workspace" "hashicat_dev" {
+  name         = "HashiCat-Development"
+  organization = tfe_organization.Terraform-Foundations.name
   auto_apply = true
-  queue_all_runs = false
-  terraform_version = "0.14.9"
   vcs_repo {
-    identifier = "hashicups-development-team/hashicups-application"
+    identifier = "development-team/hashicat-aws"
     branch = "development"
     oauth_token_id     = tfe_oauth_client.test-oauth-client.oauth_token_id
   }
@@ -52,7 +53,7 @@ resource "tfe_variable" "prod_aws_access_key" {
   value = var.AWS_ACCESS_KEY_ID
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_prod.id
+  workspace_id = tfe_workspace.hashicat_prod.id
 }
 
 resource "tfe_variable" "prod_aws_secret_key" {
@@ -60,15 +61,15 @@ resource "tfe_variable" "prod_aws_secret_key" {
   value = var.AWS_SECRET_ACCESS_KEY
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_prod.id
+  workspace_id = tfe_workspace.hashicat_prod.id
 }
 
-resource "tfe_variable" "prod-region" {
-  key = "region"
-  value = "us-west-2"
+resource "tfe_variable" "prod-prefix" {
+  key = "prefix"
+  value = "hashicat"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_prod.id
+  workspace_id = tfe_workspace.hashicat_prod.id
 }
 
 resource "tfe_variable" "prod_environment" {
@@ -76,7 +77,7 @@ resource "tfe_variable" "prod_environment" {
   value = "production"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_prod.id
+  workspace_id = tfe_workspace.hashicat_prod.id
 }
 
 resource "tfe_variable" "stage_aws_access_key" {
@@ -84,7 +85,7 @@ resource "tfe_variable" "stage_aws_access_key" {
   value = var.AWS_ACCESS_KEY_ID
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_stage.id
+  workspace_id = tfe_workspace.hashicat_stage.id
 }
 
 resource "tfe_variable" "stage_aws_secret_key" {
@@ -92,15 +93,15 @@ resource "tfe_variable" "stage_aws_secret_key" {
   value = var.AWS_SECRET_ACCESS_KEY
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_stage.id
+  workspace_id = tfe_workspace.hashicat_stage.id
 }
 
-resource "tfe_variable" "stage_region" {
-  key = "region"
-  value = "us-west-2"
+resource "tfe_variable" "stage_prefix" {
+  key = "prefix"
+  value = "hashicat"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_stage.id
+  workspace_id = tfe_workspace.hashicat_stage.id
 }
 
 resource "tfe_variable" "stage_environment" {
@@ -108,7 +109,7 @@ resource "tfe_variable" "stage_environment" {
   value = "stage"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_stage.id
+  workspace_id = tfe_workspace.hashicat_stage.id
 }
 
 resource "tfe_variable" "dev_aws_access_key" {
@@ -116,7 +117,7 @@ resource "tfe_variable" "dev_aws_access_key" {
   value = var.AWS_ACCESS_KEY_ID
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_dev.id
+  workspace_id = tfe_workspace.hashicat_dev.id
 }
 
 resource "tfe_variable" "dev_aws_secret_key" {
@@ -124,15 +125,15 @@ resource "tfe_variable" "dev_aws_secret_key" {
   value = var.AWS_SECRET_ACCESS_KEY
   category = "env"
   sensitive = true
-  workspace_id = tfe_workspace.hashicups_dev.id
+  workspace_id = tfe_workspace.hashicat_dev.id
 }
 
-resource "tfe_variable" "dev_region" {
-  key = "region"
-  value = "us-west-2"
+resource "tfe_variable" "dev_prefix" {
+  key = "prefix"
+  value = "hashicat"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_dev.id
+  workspace_id = tfe_workspace.hashicat_dev.id
 }
 
 resource "tfe_variable" "dev_environment" {
@@ -140,7 +141,7 @@ resource "tfe_variable" "dev_environment" {
   value = "development"
   category = "terraform"
   sensitive = false
-  workspace_id = tfe_workspace.hashicups_dev.id
+  workspace_id = tfe_workspace.hashicat_dev.id
 }
 
 output "oauth_token_id" {
