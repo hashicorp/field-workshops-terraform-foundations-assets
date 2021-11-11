@@ -3,7 +3,7 @@
 # Make sure it is at least 5 characters long.
 
 # We started your prefix.  Please set a value
-prefix = "tlabs"
+prefix = "tflabs"
 region = "us-east-2" # example of overriding a variables.tf setting.  This is set to us-east-1 as a default
 vpc_cidr = "10.0.0.0/16"
 subnet_cidr = "10.0.0.0/24"
