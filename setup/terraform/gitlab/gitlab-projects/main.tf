@@ -9,8 +9,8 @@ resource "gitlab_group" "networkteam" {
   visibility_level = "public"
 }
 
-resource "gitlab_project" "aws-webapp-networking" {
-  name         = "AWS WebApp Networking"
+resource "gitlab_project" "terraform-aws-webapp-networking" {
+  name         = "Terraform AWS WebApp Networking"
   namespace_id = gitlab_group.networkteam.id
   visibility_level = "public"
 }
@@ -27,12 +27,6 @@ resource "gitlab_project" "hashicat-aws" {
   visibility_level = "public"
 }
 
-resource "gitlab_project" "hashicat-modular-aws" {
-  name         = "HashiCat Modular AWS"
-  namespace_id = gitlab_group.devteam.id
-  visibility_level = "public"
-}
-
 resource "gitlab_group" "tflabs" {
   name        = "Terraform Labs"
   path        = "Terraform-Labs"
@@ -43,3 +37,4 @@ resource "gitlab_project" "tflabs" {
   name         = "Terraform Labs"
   namespace_id = gitlab_group.tflabs.id
   visibility_level = "public"
+}

@@ -18,19 +18,34 @@ resource "tfe_oauth_client" "oauth-client" {
 resource "tfe_workspace" "hashicat_prod" {
   name         = "HashiCat-Prod"
   organization = tfe_organization.Terraform-Foundations.name
-  auto_apply = false
+  auto_apply = true
+  vcs_repo {
+    identifier = "development-team/hashicat-aws"
+    branch = "master"
+    oauth_token_id     = tfe_oauth_client.oauth-client.oauth_token_id
+  }
 }
 
 resource "tfe_workspace" "hashicat_stage" {
   name         = "HashiCat-Stage"
   organization = tfe_organization.Terraform-Foundations.name
-  auto_apply = false
+  auto_apply = true
+  vcs_repo {
+    identifier = "development-team/hashicat-aws"
+    branch = "stage"
+    oauth_token_id     = tfe_oauth_client.oauth-client.oauth_token_id
+  }
 }
 
 resource "tfe_workspace" "hashicat_dev" {
   name         = "HashiCat-Development"
   organization = tfe_organization.Terraform-Foundations.name
-  auto_apply = false
+  auto_apply = true
+  vcs_repo {
+    identifier = "development-team/hashicat-aws"
+    branch = "development"
+    oauth_token_id     = tfe_oauth_client.oauth-client.oauth_token_id
+  }
 }
 
 resource "tfe_variable" "prod_aws_access_key" {

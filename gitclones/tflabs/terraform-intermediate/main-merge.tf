@@ -32,7 +32,7 @@ locals {
 # This external module encapsulates the VPC/Subnet creation similar to what we did earlier.
 # Modules are great for code reuse.
 module "networking" {
-  source = "https://github.com/hashicorp/terraform-aws-webapp-networking?ref=v1.0.0"
+  source = "github.com/hashicorp/terraform-aws-webapp-networking?ref=v1.0.0"
   # Pass the required variables  for the module
   # https://github.com/hashicorp/terraform-aws-webapp-networking/blob/main/variables.tf
    
