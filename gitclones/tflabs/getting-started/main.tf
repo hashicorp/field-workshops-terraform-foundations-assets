@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 /*
   Providers are going to be configured with different parameters based on the
   resources that it will be configurating.  Below we have an example of what the
